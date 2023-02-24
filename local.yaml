@@ -1,0 +1,22 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+
+processors:
+  cumulativetodelta:
+
+exporters:
+  logging:
+    loglevel: debug
+  otlp:
+    endpoint: gateway-collector:9000
+    tls:
+      insecure: true
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors: [cumulativetodelta]
+      exporters: [logging,otlp]

@@ -1,0 +1,26 @@
+version: "3.6"
+
+services:
+  app:
+    build:
+      context: ./app
+    environment:
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://local-collector:4317
+    depends_on:
+      - local-collector
+
+  local-collector:
+    image: otel/opentelemetry-collector-contrib:0.72.0
+    command: --config=/etc/otelcol/config.yaml
+    volumes:
+      - ./local.yaml:/etc/otelcol/config.yaml
+    ports:
+      - 4317
+    depends_on:
+      - gateway-collector
+
+  gateway-collector:
+    image: otel/opentelemetry-collector:0.72.0
+    command: --config=/etc/otelcol/config.yaml
+    volumes:
+      - ./gateway.yaml:/etc/otelcol/config.yaml

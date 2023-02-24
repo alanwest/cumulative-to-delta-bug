@@ -1,0 +1,15 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: gateway-collector:9000
+
+exporters:
+  logging:
+    loglevel: debug
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      exporters: [logging]
